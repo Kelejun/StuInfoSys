@@ -101,24 +101,59 @@ ListNode* GetNext(ListNode* p)
 	return p->next;
 }
 
+bool LoadFile(LinkList* plist)
+{
+	assert(plist != NULL);
+	FILE* fp = fopen("student.txt", "r");
+	if (fp == NULL) return false;
+	int count = 0;
+	fscanf(fp, "%d\n", &count);
+	ClearList(plist); 
+	for (int i = 0; i < count; ++i)
+	{
+		Student stud;
+		if (fscanf(fp, "%19s %19s %19s %9s %d",
+			stud.s_id,
+			stud.s_name,
+			stud.s_class_id,
+			stud.s_sex,
+			&stud.s_age) == 5)
+		{
+			Push_Front(plist, stud);
+		}
+	}
+	fclose(fp);
+	return true;
+}
+
+bool SaveFile(LinkList* plist);
+
 void InputStudent(LinkList* plist)
 {
 	char id[20], name[20], class_id[20], sex[10];
 	int age;
-	printf("è¯·è¾“å…¥å­¦ç”Ÿå­¦å·... \n");
+	printf("Ñ§ºÅ:  ");
 	while (getc(stdin) != '\n');
 	fgets(id, 20, stdin);
 	id[strlen(id) - 1] = '\0';
-	printf("è¯·è¾“å…¥å­¦ç”Ÿå§“å... \n");
+	for (ListNode* p = GetFirst(plist); p != NULL; p = GetNext(p))
+	{
+		if (strcmp(p->data.s_id, id) == 0)
+		{
+			printf("¸ÃÑ§ºÅÒÑ´æÔÚ£¬²»ÄÜÖØ¸´Â¼Èë£¡\n");
+			return;
+		}
+	}
+	printf("ĞÕÃû:  ");
 	fgets(name, 20, stdin);
 	name[strlen(name) - 1] = '\0';
-	printf("è¯·è¾“å…¥å­¦ç”Ÿç­çº§... \n");
+	printf("°à¼¶:  ");
 	fgets(class_id, 20, stdin);
 	class_id[strlen(class_id) - 1] = '\0';
-	printf("è¯·è¾“å…¥å­¦ç”Ÿæ€§åˆ«... \n");
-	fgets(sex, 10, stdin); // woman man // nan nv 
+	printf("ĞÔ±ğ:  ");
+	fgets(sex, 10, stdin); 
 	sex[strlen(sex) - 1] = '\0';
-	printf("è¯·è¾“å…¥å­¦ç”Ÿå¹´é¾„... \n");// age>= 15 && age<=35;
+	printf("ÄêÁä:  ");// age>= 15 && age<=35;
 	scanf("%d", &age);
 	Student stud;
 	strcpy(stud.s_id, id);
@@ -126,22 +161,27 @@ void InputStudent(LinkList* plist)
 	strcpy(stud.s_class_id, class_id);
 	strcpy(stud.s_sex, sex);
 	stud.s_age = age;
-
 	Push_Front(plist, stud);
+	if (!SaveFile(plist))
+	{
+		printf("±£´æÊ§°Ü");
+	}
 }
 
 void PrintStudent(LinkList* plist)
 {
 	assert(plist != NULL);
+	printf("\n----------------------------------------------\n\n");
+	printf("Ñ§ºÅ\t\tĞÕÃû\t°à¼¶\tĞÔ±ğ\tÄêÁä\n");
 	for (ListNode* p = GetFirst(plist); p != NULL; p = GetNext(p))
 	{
-		printf("id: %s ", p->data.s_id);
-		printf("name: %s ", p->data.s_name);
-		printf("class_id: %s ", p->data.s_class_id);
-		printf("sex: %s ", p->data.s_sex);
-		printf("age: %d \n", p->data.s_age);
+		printf("%s\t", p->data.s_id);
+		printf("%s\t", p->data.s_name);
+		printf("%s\t", p->data.s_class_id);
+		printf("%s\t", p->data.s_sex);
+		printf("%d \n", p->data.s_age);
 	}
-	printf("\n-------------------------------------------\n");
+	printf("\n----------------------------------------------\n\n\n");
 
 }
 
@@ -164,21 +204,97 @@ bool SaveFile(LinkList* plist)
 	return true;
 }
 
+void Search_ByID(LinkList* plist)
+{
+	assert(plist != NULL);
+	char id[20];
+	printf("Ñ§ÉúÑ§ºÅ: ");
+	while (getc(stdin) != '\n');
+	fgets(id, 20, stdin);
+	id[strlen(id) - 1] = '\0';
+	for (ListNode* p = GetFirst(plist); p != NULL; p = GetNext(p))
+	{
+		if (strcmp(p->data.s_id, id) == 0)
+		{
+			printf("Ñ§ºÅ: %s\n", p->data.s_id);
+			printf("ĞÕÃû: %s\n", p->data.s_name);
+			printf("°à¼¶: %s\n", p->data.s_class_id);
+			printf("ĞÔ±ğ: %s\n", p->data.s_sex);
+			printf("ÄêÁä: %d\n", p->data.s_age);
+			return;
+		}
+	}
+	printf("Î´ÕÒµ½Ñ§ºÅÎª %s µÄÑ§ÉúĞÅÏ¢\n", id);
+}
+
+void Search_byName(LinkList* plist)
+{
+	assert(plist != NULL);
+	char name[20];
+	printf("Ñ§ÉúĞÕÃû: ");
+	while (getc(stdin) != '\n');
+	fgets(name, 20, stdin);
+	name[strlen(name) - 1] = '\0';
+	bool found = false;
+	for (ListNode* p = GetFirst(plist); p != NULL; p = GetNext(p))
+	{
+		if (strcmp(p->data.s_name, name) == 0)
+		{
+			printf("Ñ§ºÅ: %s\n", p->data.s_id);
+			printf("ĞÕÃû: %s\n", p->data.s_name);
+			printf("°à¼¶: %s\n", p->data.s_class_id);
+			printf("ĞÔ±ğ: %s\n", p->data.s_sex);
+			printf("ÄêÁä: %d\n", p->data.s_age);
+			found = true;
+		}
+	}
+	if (!found)
+	{
+		printf("Î´ÕÒµ½ĞÕÃûÎª %s µÄÑ§ÉúĞÅÏ¢\n", name);
+	}
+}
+
+void SearchStu(LinkList* plist)
+{
+	assert(plist != NULL);
+	int select = 0;
+	printf("==========²éÑ¯Ñ§ÉúĞÅÏ¢==========\n");
+	printf("| 1. °´Ñ§ºÅ²éÑ¯                  |\n");
+	printf("| 2. °´ĞÕÃû²éÑ¯                  |\n");
+	printf("| 0. ·µ»ØÉÏÒ»¼¶                  |\n");	
+	printf("=================================\n");
+	scanf("%d", &select);
+	switch (select)
+	{
+	case 0:
+		return;
+	case 1:
+		Search_ByID(plist);
+		break;
+	case 2:
+		Search_byName(plist);
+		break;
+	default:
+		printf("Ñ¡Ôñ´íÎó£¬ÇëÖØĞÂÑ¡Ôñ .... \n");
+		break;
+	}
+}
+
 void RunMenu(LinkList* plist)
 {
 	assert(plist != NULL);
 	int select = 0;
 	do
 	{
-		printf("==========å­¦ç”Ÿä¿¡æ¯ç®¡ç†ç³»ç»Ÿ==========\n");
-		printf("| 1. å½•å…¥å­¦ç”Ÿä¿¡æ¯                  |\n");
-		printf("| 2. æŸ¥è¯¢å­¦ç”Ÿä¿¡æ¯                  |\n");
-		printf("| 3. ä¿®æ”¹å·²æœ‰å­¦ç”Ÿä¿¡æ¯              |\n");
-		printf("| 4. ç»Ÿè®¡å­¦ç”Ÿä¿¡æ¯                  |\n");
-		printf("| 5. è¾“å‡ºå…¨éƒ¨å­¦ç”Ÿä¿¡æ¯              |\n");
-		printf("| 0. é€€å‡ºç³»ç»Ÿ                      |\n");
+		printf("==========Ñ§ÉúĞÅÏ¢¹ÜÀíÏµÍ³==========\n");
+		printf("| 1. Â¼ÈëÑ§ÉúĞÅÏ¢                  |\n");
+		printf("| 2. ²éÑ¯Ñ§ÉúĞÅÏ¢                  |\n");
+		printf("| 3. ĞŞ¸ÄÒÑÓĞÑ§ÉúĞÅÏ¢              |\n");
+		printf("| 4. Í³¼ÆÑ§ÉúĞÅÏ¢                  |\n");
+		printf("| 5. Êä³öÈ«²¿Ñ§ÉúĞÅÏ¢              |\n");
+		printf("| 0. ÍË³öÏµÍ³                      |\n");
 		printf("====================================\n");
-		printf("è¯·é€‰æ‹© .... ");
+		printf("ÇëÑ¡Ôñ .... ");
 		scanf("%d", &select);
 		switch (select)
 		{
@@ -186,10 +302,21 @@ void RunMenu(LinkList* plist)
 		case 1:
 			InputStudent(plist);
 			break;
+		case 2:
+			if (IsEmpty(plist))
+			{
+				printf("Ñ§ÉúĞÅÏ¢Îª¿Õ£¬ÇëÏÈÂ¼ÈëÑ§ÉúĞÅÏ¢\n");
+			}
+			else
+			{
+				SearchStu(plist);
+			}
+			break;
 		case 5:
 			PrintStudent(plist);
+			break;
 		default:
-			printf("é€‰æ‹©é”™è¯¯ ï¼Œè¯·é‡æ–°é€‰æ‹©  .... \n");
+			printf("Ñ¡Ôñ´íÎó £¬ÇëÖØĞÂÑ¡Ôñ  .... \n");
 			break;
 		}
 	} while (select != 0);
@@ -199,7 +326,7 @@ int main()
 {
 	LinkList studlist;
 	InitList(&studlist);
-	//LoadFile(&studlist);
+	LoadFile(&studlist);
 	RunMenu(&studlist);
 	SaveFile(&studlist);
 	DestroyList(&studlist);
