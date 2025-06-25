@@ -152,9 +152,19 @@ void InputStudent(LinkList* plist)
 	class_id[strlen(class_id) - 1] = '\0';
 	printf("性别:  ");
 	fgets(sex, 10, stdin); 
+	if (strcmp(sex, "男\n") != 0 || strcmp(sex, "女\n") != 0)
+	{
+		printf("性别只能是男或女，请重新输入\n\n");
+		return;
+	}
 	sex[strlen(sex) - 1] = '\0';
-	printf("年龄:  ");// age>= 15 && age<=35;
+	printf("年龄:  ");
 	scanf("%d", &age);
+	if (age < 15 || age>35)
+	{
+		printf("年龄不能小于15岁或大于35岁，请重新输入\n\n");
+		return;
+	}
 	Student stud;
 	strcpy(stud.s_id, id);
 	strcpy(stud.s_name, name);
