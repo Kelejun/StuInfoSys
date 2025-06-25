@@ -151,8 +151,8 @@ void InputStudent(LinkList* plist)
 	fgets(class_id, 20, stdin);
 	class_id[strlen(class_id) - 1] = '\0';
 	printf("性别:  ");
-	fgets(sex, 10, stdin); 
-	if (strcmp(sex, "男\n") != 0 || strcmp(sex, "女\n") != 0)
+	fgets(sex, 10, stdin);
+	if (!(strcmp(sex, "男\n") == 0 || strcmp(sex, "女\n") == 0))
 	{
 		printf("性别只能是男或女，请重新输入\n\n");
 		return;
@@ -175,6 +175,10 @@ void InputStudent(LinkList* plist)
 	if (!SaveFile(plist))
 	{
 		printf("保存失败");
+	}
+	else
+	{
+		printf("\n录入成功！\n\n");
 	}
 }
 
@@ -290,6 +294,65 @@ void SearchStu(LinkList* plist)
 	}
 }
 
+void EditInfo(LinkList* plist)
+{
+	assert(plist != NULL);
+	char id[20];
+	printf("请输入要修改的学生学号: ");
+	while (getc(stdin) != '\n');
+	fgets(id, 20, stdin);
+	id[strlen(id) - 1] = '\0';
+
+	ListNode* prev = plist->head;
+	ListNode* curr = plist->head->next;
+	while (curr != NULL)
+	{
+		if (strcmp(curr->data.s_id, id) == 0)
+		{
+			prev->next = curr->next;
+			Freenode(curr);
+			plist->cursize--;
+			Student stud;
+			strcpy(stud.s_id, id); 
+			printf("新姓名: ");
+			fgets(stud.s_name, 20, stdin);
+			stud.s_name[strlen(stud.s_name) - 1] = '\0';
+			printf("新班级: ");
+			fgets(stud.s_class_id, 20, stdin);
+			stud.s_class_id[strlen(stud.s_class_id) - 1] = '\0';
+			while (1)
+			{
+				printf("新性别(男/女): ");
+				fgets(stud.s_sex, 10, stdin);
+				stud.s_sex[strlen(stud.s_sex) - 1] = '\0';
+				if (strcmp(stud.s_sex, "男") == 0 || strcmp(stud.s_sex, "女") == 0)
+					break;
+				printf("性别只能输入“男”或“女”，请重新输入: \n");
+			}
+			printf("新年龄: ");
+			scanf("%d", &stud.s_age);
+			if (stud.s_age < 15 || stud.s_age > 35)
+			{
+				printf("年龄不能小于15岁或大于35岁，修改失败！\n");
+				return;
+			}
+			Push_Front(plist, stud);
+			if (!SaveFile(plist))
+			{
+				printf("保存失败\n");
+			}
+			else
+			{
+				printf("\n修改成功！\n\n");
+			}
+			return;
+		}
+		prev = curr;
+		curr = curr->next;
+	}
+	printf("未找到学号为 %s 的学生信息，无法修改！\n", id);
+}
+
 void RunMenu(LinkList* plist)
 {
 	assert(plist != NULL);
@@ -320,6 +383,16 @@ void RunMenu(LinkList* plist)
 			else
 			{
 				SearchStu(plist);
+			}
+			break;
+		case 3:
+			if (IsEmpty(plist))
+			{
+				printf("学生信息为空，请先录入信息\n");
+			}
+			else
+			{
+				EditInfo(plist);
 			}
 			break;
 		case 5:
