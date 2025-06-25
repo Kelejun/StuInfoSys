@@ -272,11 +272,11 @@ void SearchStu(LinkList* plist)
 {
 	assert(plist != NULL);
 	int select = 0;
-	printf("==========查询学生信息==========\n");
-	printf("| 1. 按学号查询                  |\n");
-	printf("| 2. 按姓名查询                  |\n");
-	printf("| 0. 返回上一级                  |\n");	
-	printf("=================================\n");
+	printf("============查询学生信息============\n");
+	printf("| 1. 按学号查询                    |\n");
+	printf("| 2. 按姓名查询                    |\n");
+	printf("| 0. 返回上一级                    |\n");	
+	printf("====================================\n");
 	scanf("%d", &select);
 	switch (select)
 	{
@@ -302,7 +302,6 @@ void EditInfo(LinkList* plist)
 	while (getc(stdin) != '\n');
 	fgets(id, 20, stdin);
 	id[strlen(id) - 1] = '\0';
-
 	ListNode* prev = plist->head;
 	ListNode* curr = plist->head->next;
 	while (curr != NULL)
@@ -353,6 +352,48 @@ void EditInfo(LinkList* plist)
 	printf("未找到学号为 %s 的学生信息，无法修改！\n", id);
 }
 
+void Sumup(LinkList* plist)
+{
+	struct ClassStat 
+	{
+		char class_id[20];
+		int male;
+		int female;
+	};
+	ClassStat stats[100]; 
+	int class_count = 0;
+
+	for (ListNode* p = GetFirst(plist); p != NULL; p = GetNext(p)) 
+	{
+		int idx = -1;
+		for (int i = 0; i < class_count; ++i) 
+		{
+			if (strcmp(stats[i].class_id, p->data.s_class_id) == 0) 
+			{
+				idx = i;
+				break;
+			}
+		}
+		if (idx == -1) 
+		{
+			idx = class_count++;
+			strcpy(stats[idx].class_id, p->data.s_class_id);
+			stats[idx].male = 0;
+			stats[idx].female = 0;
+		}
+		if (strcmp(p->data.s_sex, "男") == 0)
+			stats[idx].male++;
+		else if (strcmp(p->data.s_sex, "女") == 0)
+			stats[idx].female++;
+	}
+	printf("\n班级\t男生人数\t女生人数\n");
+	for (int i = 0; i < class_count; ++i)
+	{
+		printf("%s\t%d\t\t%d\n", stats[i].class_id, stats[i].male, stats[i].female);
+	}
+	printf("\n");
+}
+
 void RunMenu(LinkList* plist)
 {
 	assert(plist != NULL);
@@ -393,6 +434,17 @@ void RunMenu(LinkList* plist)
 			else
 			{
 				EditInfo(plist);
+			}
+			break;
+		case 4:
+			printf("学生总数: %d\n", GetSize(plist));
+			if (IsEmpty(plist))
+			{
+				printf("学生信息为空\n");
+			}
+			else
+			{
+				Sumup(plist);
 			}
 			break;
 		case 5:
