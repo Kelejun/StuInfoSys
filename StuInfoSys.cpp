@@ -145,7 +145,6 @@ bool SaveFile(LinkList* plist)
 	return true;
 }
 
-
 void InputStudent(LinkList* plist)
 {
 	while (1)
@@ -312,7 +311,7 @@ void SearchStu(LinkList* plist)
 		Search_byName(plist);
 		break;
 	default:
-		printf("选项不存在，请重新选择 > \n");
+		printf("选项不存在\n");
 		break;
 	}
 }
@@ -518,7 +517,7 @@ void RunMenu(LinkList* plist)
 			PrintStudent(plist);
 			break;
 		default:
-			printf("选择错误 ，请重新选择  .... \n");
+			printf("选项不存在！ \n");
 			break;
 		}
 	} while (select != 0);
