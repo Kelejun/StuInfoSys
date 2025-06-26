@@ -130,62 +130,85 @@ bool SaveFile(LinkList* plist);
 
 void InputStudent(LinkList* plist)
 {
-	char id[20], name[20], class_id[20], sex[10];
-	int age;
-	printf("学号:  ");
-	while (getc(stdin) != '\n');
-	fgets(id, 20, stdin);
-	id[strlen(id) - 1] = '\0';
-	for (ListNode* p = GetFirst(plist); p != NULL; p = GetNext(p))
+	while (1)
 	{
-		if (strcmp(p->data.s_id, id) == 0)
+		int ch;
+		while ((ch = getchar()) != '\n' && ch != EOF);
+		char id[20], name[20], class_id[20], sex[10];
+		int age;
+		printf("\n学号:  ");
+		fgets(id, 20, stdin);
+		if (id[strlen(id) - 1] == '\n') id[strlen(id) - 1] = '\0';
+		if (strlen(id) == 0) continue;
+		int exists = 0;
+		for (ListNode* p = GetFirst(plist); p != NULL; p = GetNext(p))
 		{
-			printf("该学号已存在，不能重复录入！\n");
-			return;
+			if (strcmp(p->data.s_id, id) == 0)
+			{
+				printf("该学号已存在，不能重复录入！\n");
+				exists = 1;
+				break;
+			}
 		}
-	}
-	printf("姓名:  ");
-	fgets(name, 20, stdin);
-	name[strlen(name) - 1] = '\0';
-	printf("班级:  ");
-	fgets(class_id, 20, stdin);
-	class_id[strlen(class_id) - 1] = '\0';
-	printf("性别:  ");
-	fgets(sex, 10, stdin);
-	if (!(strcmp(sex, "男\n") == 0 || strcmp(sex, "女\n") == 0))
-	{
-		printf("性别只能是男或女，请重新输入\n\n");
-		return;
-	}
-	sex[strlen(sex) - 1] = '\0';
-	printf("年龄:  ");
-	scanf("%d", &age);
-	if (age < 15 || age>35)
-	{
-		printf("年龄不能小于15岁或大于35岁，请重新输入\n\n");
-		return;
-	}
-	Student stud;
-	strcpy(stud.s_id, id);
-	strcpy(stud.s_name, name);
-	strcpy(stud.s_class_id, class_id);
-	strcpy(stud.s_sex, sex);
-	stud.s_age = age;
-	Push_Front(plist, stud);
-	if (!SaveFile(plist))
-	{
-		printf("保存失败");
-	}
-	else
-	{
-		printf("\n录入成功！\n\n");
+		if (exists) continue;
+		printf("姓名:  ");
+		fgets(name, 20, stdin);
+		name[strlen(name) - 1] = '\0';
+		printf("班级:  ");
+		fgets(class_id, 20, stdin);
+		class_id[strlen(class_id) - 1] = '\0';
+		printf("性别:  ");
+		fgets(sex, 10, stdin);
+		if (!(strcmp(sex, "男\n") == 0 || strcmp(sex, "女\n") == 0))
+		{
+			printf("性别只能是男或女，请重新输入\n\n");
+			continue;
+		}
+		sex[strlen(sex) - 1] = '\0';
+		printf("年龄:  ");
+		if (scanf("%d", &age) != 1)
+		{
+			printf("输入年龄有误，请重新输入\n\n");
+			while (getc(stdin) != '\n'); 
+			continue;
+		}
+		while (getc(stdin) != '\n'); 
+		if (age < 15 || age > 35)
+		{
+			printf("年龄不能小于15岁或大于35岁，请重新输入\n\n");
+			continue;
+		}
+		Student stud;
+		strcpy(stud.s_id, id);
+		strcpy(stud.s_name, name);
+		strcpy(stud.s_class_id, class_id);
+		strcpy(stud.s_sex, sex);
+		stud.s_age = age;
+		Push_Front(plist, stud);
+		if (!SaveFile(plist))
+		{
+			printf("保存失败");
+		}
+		else
+		{
+			printf("\n录入成功！\n\n");
+		}
+		printf("输入1继续录入，输入其他字符返回 > ");
+		int choice;
+		scanf("%d", &choice);
+		if (choice != 1)
+		{
+			while (getc(stdin) != '\n');
+			break;
+			printf("\n");
+		}
 	}
 }
 
 void PrintStudent(LinkList* plist)
 {
 	assert(plist != NULL);
-	printf("\n----------------------------------------------\n\n");
+	printf("\n------------------------------------------------------\n\n");
 	printf("学号\t\t姓名\t班级\t性别\t年龄\n");
 	for (ListNode* p = GetFirst(plist); p != NULL; p = GetNext(p))
 	{
@@ -195,7 +218,7 @@ void PrintStudent(LinkList* plist)
 		printf("%s\t", p->data.s_sex);
 		printf("%d \n", p->data.s_age);
 	}
-	printf("\n----------------------------------------------\n\n\n");
+	printf("\n------------------------------------------------------\n\n\n");
 
 }
 
@@ -230,11 +253,11 @@ void Search_ByID(LinkList* plist)
 	{
 		if (strcmp(p->data.s_id, id) == 0)
 		{
-			printf("学号: %s\n", p->data.s_id);
+			printf("\n学号: %s\n", p->data.s_id);
 			printf("姓名: %s\n", p->data.s_name);
 			printf("班级: %s\n", p->data.s_class_id);
 			printf("性别: %s\n", p->data.s_sex);
-			printf("年龄: %d\n", p->data.s_age);
+			printf("年龄: %d\n\n", p->data.s_age);
 			return;
 		}
 	}
@@ -254,11 +277,11 @@ void Search_byName(LinkList* plist)
 	{
 		if (strcmp(p->data.s_name, name) == 0)
 		{
-			printf("学号: %s\n", p->data.s_id);
+			printf("\n学号: %s\n", p->data.s_id);
 			printf("姓名: %s\n", p->data.s_name);
 			printf("班级: %s\n", p->data.s_class_id);
 			printf("性别: %s\n", p->data.s_sex);
-			printf("年龄: %d\n", p->data.s_age);
+			printf("年龄: %d\n\n", p->data.s_age);
 			found = true;
 		}
 	}
@@ -277,6 +300,7 @@ void SearchStu(LinkList* plist)
 	printf("| 2. 按姓名查询                    |\n");
 	printf("| 0. 返回上一级                    |\n");	
 	printf("====================================\n");
+	printf("请选择 > ");
 	scanf("%d", &select);
 	switch (select)
 	{
@@ -289,7 +313,7 @@ void SearchStu(LinkList* plist)
 		Search_byName(plist);
 		break;
 	default:
-		printf("选择错误，请重新选择 .... \n");
+		printf("选项不存在，请重新选择 > \n");
 		break;
 	}
 }
@@ -354,27 +378,27 @@ void EditInfo(LinkList* plist)
 
 void Sumup(LinkList* plist)
 {
-	struct ClassStat 
+	printf("\n\n学生总数: %d\n", GetSize(plist));
+	struct ClassStat
 	{
 		char class_id[20];
 		int male;
 		int female;
 	};
-	ClassStat stats[100]; 
+	ClassStat stats[100];
 	int class_count = 0;
-
-	for (ListNode* p = GetFirst(plist); p != NULL; p = GetNext(p)) 
+	for (ListNode* p = GetFirst(plist); p != NULL; p = GetNext(p))
 	{
 		int idx = -1;
-		for (int i = 0; i < class_count; ++i) 
+		for (int i = 0; i < class_count; ++i)
 		{
-			if (strcmp(stats[i].class_id, p->data.s_class_id) == 0) 
+			if (strcmp(stats[i].class_id, p->data.s_class_id) == 0)
 			{
 				idx = i;
 				break;
 			}
 		}
-		if (idx == -1) 
+		if (idx == -1)
 		{
 			idx = class_count++;
 			strcpy(stats[idx].class_id, p->data.s_class_id);
@@ -386,12 +410,46 @@ void Sumup(LinkList* plist)
 		else if (strcmp(p->data.s_sex, "女") == 0)
 			stats[idx].female++;
 	}
-	printf("\n班级\t男生人数\t女生人数\n");
+	printf("\n班级\t男生人数\t女生人数\t总人数\n");
 	for (int i = 0; i < class_count; ++i)
 	{
-		printf("%s\t%d\t\t%d\n", stats[i].class_id, stats[i].male, stats[i].female);
+		int total = stats[i].male + stats[i].female;
+		printf("%s\t%d\t\t%d\t\t%d\n", stats[i].class_id, stats[i].male, stats[i].female, total);
 	}
 	printf("\n");
+}
+
+void DelStu(LinkList *plist)
+{
+	assert(plist != NULL);
+	char id[20];
+	printf("请输入要删除的学生学号: ");
+	while (getc(stdin) != '\n');
+	fgets(id, 20, stdin);
+	id[strlen(id) - 1] = '\0';
+	ListNode* prev = plist->head;
+	ListNode* curr = plist->head->next;
+	while (curr != NULL)
+	{
+		if (strcmp(curr->data.s_id, id) == 0)
+		{
+			prev->next = curr->next;
+			Freenode(curr);
+			plist->cursize--;
+			if (!SaveFile(plist))
+			{
+				printf("保存失败\n");
+			}
+			else
+			{
+				printf("\n删除成功！\n\n");
+			}
+			return;
+		}
+		prev = curr;
+		curr = curr->next;
+	}
+	printf("未找到学号为 %s 的学生信息，无法删除！\n", id);
 }
 
 void RunMenu(LinkList* plist)
@@ -404,11 +462,12 @@ void RunMenu(LinkList* plist)
 		printf("| 1. 录入学生信息                  |\n");
 		printf("| 2. 查询学生信息                  |\n");
 		printf("| 3. 修改已有学生信息              |\n");
-		printf("| 4. 统计学生信息                  |\n");
-		printf("| 5. 输出全部学生信息              |\n");
+		printf("| 4. 删除已有学生信息              |\n");
+		printf("| 5. 统计学生信息                  |\n");
+		printf("| 6. 输出全部学生信息              |\n");
 		printf("| 0. 退出系统                      |\n");
 		printf("====================================\n");
-		printf("请选择 .... ");
+		printf("请选择 > ");
 		scanf("%d", &select);
 		switch (select)
 		{
@@ -437,7 +496,16 @@ void RunMenu(LinkList* plist)
 			}
 			break;
 		case 4:
-			printf("学生总数: %d\n", GetSize(plist));
+			if(IsEmpty(plist))
+			{
+				printf("学生信息为空，请先录入信息\n");
+			}
+			else
+			{
+				DelStu(plist);
+			}
+			break;
+		case 5:
 			if (IsEmpty(plist))
 			{
 				printf("学生信息为空\n");
@@ -447,7 +515,7 @@ void RunMenu(LinkList* plist)
 				Sumup(plist);
 			}
 			break;
-		case 5:
+		case 6:
 			PrintStudent(plist);
 			break;
 		default:
