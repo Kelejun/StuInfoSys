@@ -43,7 +43,7 @@ void Freenode(ListNode* p)
 void InitList(LinkList* plist)
 {
 	ListNode* s = Buynode();
-	plist->head = s; // 
+	plist->head = s; 
 	plist->cursize = 0;
 }
 
@@ -64,7 +64,7 @@ void ClearList(LinkList* plist)
 	assert(plist != NULL);
 	while (plist->head->next != NULL)
 	{
-		ListNode* q = plist->head->next; // first data;
+		ListNode* q = plist->head->next;
 		plist->head->next = q->next;
 		Freenode(q);
 	}
@@ -92,7 +92,7 @@ void Push_Front(LinkList* plist, ElemType val)
 ListNode* GetFirst(LinkList* plist)
 {
 	assert(plist != NULL);
-	return plist->head->next; // 
+	return plist->head->next;
 }
 
 ListNode* GetNext(ListNode* p)
@@ -150,7 +150,7 @@ void InputStudent(LinkList* plist)
 				break;
 			}
 		}
-		if (exists) continue;
+		if (exists) break;
 		printf("姓名:  ");
 		fgets(name, 20, stdin);
 		name[strlen(name) - 1] = '\0';
@@ -161,22 +161,22 @@ void InputStudent(LinkList* plist)
 		fgets(sex, 10, stdin);
 		if (!(strcmp(sex, "男\n") == 0 || strcmp(sex, "女\n") == 0))
 		{
-			printf("性别只能是男或女，请重新输入\n\n");
-			continue;
+			printf("性别只能是男或女！\n\n");
+			break;
 		}
 		sex[strlen(sex) - 1] = '\0';
 		printf("年龄:  ");
 		if (scanf("%d", &age) != 1)
 		{
-			printf("输入年龄有误，请重新输入\n\n");
+			printf("年龄有误！\n\n");
 			while (getc(stdin) != '\n'); 
-			continue;
+			break;
 		}
 		while (getc(stdin) != '\n'); 
 		if (age < 15 || age > 35)
 		{
-			printf("年龄不能小于15岁或大于35岁，请重新输入\n\n");
-			continue;
+			printf("年龄不能小于15岁或大于35岁！\n\n");
+			break;
 		}
 		Student stud;
 		strcpy(stud.s_id, id);
@@ -199,8 +199,8 @@ void InputStudent(LinkList* plist)
 		if (choice != 1)
 		{
 			while (getc(stdin) != '\n');
-			break;
 			printf("\n");
+			break;
 		}
 	}
 }
