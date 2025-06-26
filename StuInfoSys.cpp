@@ -292,22 +292,23 @@ void Search_byName(LinkList* plist)
 void SearchStu(LinkList* plist)
 {
 	assert(plist != NULL);
-	int select = 0;
+	char select;
 	printf("============查询学生信息============\n");
 	printf("| 1. 按学号查询                    |\n");
 	printf("| 2. 按姓名查询                    |\n");
 	printf("| 0. 返回上一级                    |\n");	
 	printf("====================================\n");
 	printf("请选择 > ");
-	scanf("%d", &select);
+	scanf("%c", &select);
+	getchar();
 	switch (select)
 	{
-	case 0:
+	case '0':
 		return;
-	case 1:
+	case '1':
 		Search_ByID(plist);
 		break;
-	case 2:
+	case '2':
 		Search_byName(plist);
 		break;
 	default:
@@ -453,7 +454,7 @@ void DelStu(LinkList *plist)
 void RunMenu(LinkList* plist)
 {
 	assert(plist != NULL);
-	int select = 0;
+	char select;
 	do
 	{
 		printf("==========学生信息管理系统==========\n");
@@ -466,14 +467,15 @@ void RunMenu(LinkList* plist)
 		printf("| 0. 退出系统                      |\n");
 		printf("====================================\n");
 		printf("请选择 > ");
-		scanf("%d", &select);
+		scanf("%c", &select);
+		getchar();
 		switch (select)
 		{
-		case 0: break;
-		case 1:
+		case '0': break;
+		case '1':
 			InputStudent(plist);
 			break;
-		case 2:
+		case '2':
 			if (IsEmpty(plist))
 			{
 				printf("学生信息为空，请先录入学生信息\n");
@@ -483,7 +485,7 @@ void RunMenu(LinkList* plist)
 				SearchStu(plist);
 			}
 			break;
-		case 3:
+		case '3':
 			if (IsEmpty(plist))
 			{
 				printf("学生信息为空，请先录入信息\n");
@@ -493,7 +495,7 @@ void RunMenu(LinkList* plist)
 				EditInfo(plist);
 			}
 			break;
-		case 4:
+		case '4':
 			if(IsEmpty(plist))
 			{
 				printf("学生信息为空，请先录入信息\n");
@@ -503,7 +505,7 @@ void RunMenu(LinkList* plist)
 				DelStu(plist);
 			}
 			break;
-		case 5:
+		case '5':
 			if (IsEmpty(plist))
 			{
 				printf("学生信息为空\n");
@@ -513,14 +515,14 @@ void RunMenu(LinkList* plist)
 				Sumup(plist);
 			}
 			break;
-		case 6:
+		case '6':
 			PrintStudent(plist);
 			break;
 		default:
 			printf("选项不存在！ \n");
 			break;
 		}
-	} while (select != 0);
+	} while (select != '0');
 }
 
 int main()
