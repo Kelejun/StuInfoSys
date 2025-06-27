@@ -210,7 +210,7 @@ void InputStudent(LinkList* plist)
 		{
 			printf("\n录入成功！\n\n");
 		}
-		printf("输入1继续录入，输入其他字符返回 > ");
+		printf("输入1继续录入，输入0返回 > ");
 		int choice;
 		scanf("%d", &choice);
 		if (choice != 1)
